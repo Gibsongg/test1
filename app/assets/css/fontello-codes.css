@@ -1,0 +1,10 @@
+
+.icon-edit:before { content: '\e800'; } /* '' */
+.icon-pencil:before { content: '\e801'; } /* '' */
+.icon-trash-empty:before { content: '\e802'; } /* '' */
+.icon-doc:before { content: '\e803'; } /* '' */
+.icon-block:before { content: '\e804'; } /* '' */
+.icon-floppy:before { content: '\e805'; } /* '' */
+.icon-pencil-squared:before { content: '\f14b'; } /* '' */
+.icon-doc-inv:before { content: '\f15b'; } /* '' */
+.icon-trash:before { content: '\f1f8'; } /* '' */
