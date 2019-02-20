@@ -1,0 +1,19 @@
+{
+  "name": "root/local",
+  "type": "",
+  "minimum-stability": "stable",
+  "require": {
+    "nikic/fast-route": "^1.3",
+    "php-di/php-di": "^6.0",
+    "zircote/swagger-php": "^3.0",
+    "beberlei/assert": "^3.0",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "monolog/monolog": "^1.24"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "library"
+    }
+  }
+}
