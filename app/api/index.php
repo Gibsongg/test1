@@ -3,8 +3,6 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
-
 use DI\ContainerBuilder;
 
 header('Content-type: application/json');
@@ -14,21 +12,9 @@ header('Access-Control-Allow-Methods: "GET, POST, DELETE, PUT, OPTIONS, HEAD"');
 header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization, X-Requested-With, Accept');
 
 
-
-error_clear_last();
-
-//TODO: сделать конфигурацию роутов через объект
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/local/library/api/config/main.php');
-    /**
-     * @var $config stdClass
-     */
-    foreach ($config->routes as $route) {
-        $r->addRoute(
-            $route['method'],
-            '/1.0' . $route['template'],
-            ['api\controllers\\' . $route['controller'] . 'Controller', 'action' . $route['action']]);
-    }
+    $r->addRoute('GET', '/member', ['Domain\Controllers\MemberController', 'actionIndex']);
+    $r->addRoute('POST', '/member/{id:\d+}', ['Domain\Controllers\MemberController', 'actionUpdate']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -39,9 +25,7 @@ if (false !== $pos = strpos($uri, '?')) {
 }
 $uri = rawurldecode($uri);
 
-
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
@@ -80,14 +64,11 @@ switch ($routeInfo[0]) {
 
             $code = $e->getCode();
 
-            if($e->getCode() === 0) {
+            if ($e->getCode() === 0) {
                 $code = 500;
             }
 
             header("HTTP/1.0 {$code} Server Error");
-
-            $LogsService = $container->get(\api\services\security\LogsService::class);
-            $LogsService->errorException($uri, $e);
 
             $json = [
                 'status' => $code,
@@ -96,8 +77,7 @@ switch ($routeInfo[0]) {
             ];
         }
 
-        echo json_encode($json, JSON_UNESCAPED_UNICODE);
-
+        //echo json_encode($json, JSON_UNESCAPED_UNICODE);
 
         break;
 }

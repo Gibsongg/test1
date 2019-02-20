@@ -1,1 +1,4 @@
-/data
+.idea
+data/mysql
+data/redis
+data/node
