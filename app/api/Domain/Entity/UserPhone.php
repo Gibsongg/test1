@@ -7,9 +7,9 @@ use Domain\ValueObject\Phone;
 
 class UserPhone
 {
-    protected $id;
-    protected $userId;
-    protected $number;
+    public $id;
+    public $userId;
+    public $number;
 
     public function __construct(int $id, int $userId, Phone $number)
     {

@@ -11,7 +11,31 @@ class MemberRepository implements IMemberRepository
 {
     public function getList(): MemberCollection
     {
-        $collection = new MemberRepository();
+        $data = [
+            [
+                'id' => 1,
+                'firstname' => 'Петр',
+                'surname' => 'Васильев'
+            ],
+            [
+                'id' => 2,
+                'firstname' => 'Роман',
+                'surname' => 'Скляров'
+            ]
+        ];
+
+        $collection = new MemberCollection();
+
+        foreach ($data as $item) {
+            $entity = new Member(
+                $item['id'],
+                $item['firstname'],
+                $item['surname']
+            );
+            $entity->setId($item['id']);
+
+            $collection->set($entity);
+        }
 
         return $collection;
     }

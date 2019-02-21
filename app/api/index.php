@@ -1,24 +1,26 @@
 <?php
+include_once('vendor/autoload.php');
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-use DI\ContainerBuilder;
 
-header('Content-type: application/json');
+//header('Content-type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: "GET, POST, DELETE, PUT, OPTIONS, HEAD"');
 header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization, X-Requested-With, Accept');
 
+use DI\ContainerBuilder;
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/member', ['Domain\Controllers\MemberController', 'actionIndex']);
-    $r->addRoute('POST', '/member/{id:\d+}', ['Domain\Controllers\MemberController', 'actionUpdate']);
+    $r->addRoute('GET', '/api/member', ['Infrastructure\Controllers\MemberController', 'actionIndex']);
+    $r->addRoute('POST', '/api/member/{id:\d+}', ['Infrastructure\Controllers\MemberController', 'actionUpdate']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
+
 
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
@@ -26,6 +28,7 @@ if (false !== $pos = strpos($uri, '?')) {
 $uri = rawurldecode($uri);
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
@@ -52,7 +55,10 @@ switch ($routeInfo[0]) {
         $json = [];
 
         try {
+
             $container = ContainerBuilder::buildDevContainer();
+            $container->set(Domain\Repository\IMemberRepository::class, \DI\create(Infrastructure\Repository\MemberRepository::class));
+            $container->set(Domain\Repository\IMemberRepository::class, \DI\create(Infrastructure\Repository\MemberRepository::class));
             $controller = $container->call($handler, $vars);
 
             $json = [
@@ -60,6 +66,7 @@ switch ($routeInfo[0]) {
                 'message' => 'ok',
                 'data' => $controller
             ];
+
         } catch (\Exception $e) {
 
             $code = $e->getCode();
@@ -77,7 +84,7 @@ switch ($routeInfo[0]) {
             ];
         }
 
-        //echo json_encode($json, JSON_UNESCAPED_UNICODE);
+        echo json_encode($json, JSON_UNESCAPED_UNICODE);
 
         break;
 }
