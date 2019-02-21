@@ -58,7 +58,7 @@ switch ($routeInfo[0]) {
 
             $container = ContainerBuilder::buildDevContainer();
             $container->set(Domain\Repository\IMemberRepository::class, \DI\create(Infrastructure\Repository\MemberRepository::class));
-            //$container->set(Domain\Repository\IPhoneRepository::class, \DI\create(Infrastructure\Repository\PhoneRepository::class));
+            $container->set(Domain\Repository\IPhoneRepository::class, \DI\create(Infrastructure\Repository\PhoneRepository::class));
             $controller = $container->call($handler, $vars);
 
             $json = [

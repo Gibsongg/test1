@@ -9,6 +9,7 @@ class UserPhone
 {
     public $id;
     public $number;
+    public $numberFormat;
 
     public function __construct(Phone $number)
     {
