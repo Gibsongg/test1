@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace Infrastructure\Provaider;
-
+//TODO: Сделать рефакторинг названия диреткории и неймспейсов
 class DB
 {
     private static $instance = null;

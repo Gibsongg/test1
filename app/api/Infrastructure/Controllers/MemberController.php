@@ -6,6 +6,7 @@ namespace Infrastructure\Controllers;
 
 use Domain\Service\MemberService;
 
+
 class MemberController
 {
     protected $service;
@@ -26,13 +27,18 @@ class MemberController
 
     public function actionCreate()
     {
+        return $this->service->createMember($_REQUEST);
 
     }
 
     public function actionUpdate($id)
     {
-
-        $this->service->addMember((int)$id, $_REQUEST);
+        $this->service->updateMember((int)$id, $_REQUEST);
     }
 
+
+    public function actionDelete($id)
+    {
+        $this->service->deleteMember((int) $id);
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 include_once('vendor/autoload.php');
+use DI\ContainerBuilder;
+
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -11,11 +13,15 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: "GET, POST, DELETE, PUT, OPTIONS, HEAD"');
 header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization, X-Requested-With, Accept');
 
-use DI\ContainerBuilder;
+
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/api/member', ['Infrastructure\Controllers\MemberController', 'actionIndex']);
+    $r->addRoute('POST', '/api/member', ['Infrastructure\Controllers\MemberController', 'actionCreate']);
     $r->addRoute('POST', '/api/member/{id:\d+}', ['Infrastructure\Controllers\MemberController', 'actionUpdate']);
+    $r->addRoute('DELETE', '/api/member/{id:\d+}', ['Infrastructure\Controllers\MemberController', 'actionDelete']);
+    $r->addRoute('POST', '/api/member/{id:\d+}/phone', ['Infrastructure\Controllers\MemberController', 'actionAddPhone']);
+    $r->addRoute('DELETE', '/api/member/{id:\d+}/phone/{id:\d+}/', ['Infrastructure\Controllers\MemberController', 'actionDeletePhone']);
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -55,7 +61,6 @@ switch ($routeInfo[0]) {
         $json = [];
 
         try {
-
             $container = ContainerBuilder::buildDevContainer();
             $container->set(Domain\Repository\IMemberRepository::class, \DI\create(Infrastructure\Repository\MemberRepository::class));
             $container->set(Domain\Repository\IPhoneRepository::class, \DI\create(Infrastructure\Repository\PhoneRepository::class));

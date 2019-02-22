@@ -7,7 +7,7 @@ use Domain\Collection\PhoneCollection;
 
 class Member
 {
-    protected $id;
+    public $id;
     public $firstname;
     public $surname;
     public $phone;

@@ -17,11 +17,12 @@ class MemberRepository implements IMemberRepository
 {
     protected $tableName = 'member';
     protected $phoneRepository;
+    private $lastId = null;
 
     public function __construct()
     {
         //Подключим дополнительно репозиторий телефонов
-        $this->phoneRepository  = new PhoneRepository();
+        $this->phoneRepository = new PhoneRepository();
     }
 
     /** Выборка списка контактов из базы.
@@ -49,26 +50,90 @@ class MemberRepository implements IMemberRepository
             $collection->set($entity);
 
         }
-        
+
         return $collection;
     }
 
 
+    /** Возвращаем пользователя по ID
+     * @param int $id
+     * @return Member|null
+     */
+    public function getById(int $id): ?Member
+    {
+        //Создаем инстанс подключения PDO
+        $db = DB::getInstance();
+        $row = $db->query('SELECT * FROM ' . $this->tableName . ' WHERE id = ' . $id)->fetch();
 
-    public function getById(int $id) {
-
+        if (!empty($row)) {
+            //Создаем сужность и мапим ее
+            $entity = new Member(
+                (string)$row['firstname'],
+                (string)$row['surname'],
+                $this->phoneRepository->getByUserId((int)$row['id'])
+            );
+            $entity->setId((int)$row['id']);
+            return $entity;
+        } else {
+            return null;
+        }
     }
 
 
+    /** Добавление нового контакта
+     * @param Member $member
+     * @return bool
+     */
     public function add(Member $member): bool
     {
+        $db = DB::getInstance();
+        $row = $db->prepare('INSERT INTO ' . $this->tableName .
+            ' (firstname, surname) VALUES (:firstname, :surname)');
 
+        $row->bindValue(':firstname', $member->firstname, SQLITE3_TEXT);
+        $row->bindValue(':surname', $member->surname, SQLITE3_TEXT);
+        $result = $row->execute();
+        $this->lastId = $db->lastInsertId();
+        return $result;
+    }
+
+    /** Обновление пользователя
+     * @param Member $member
+     * @return bool
+     */
+    public function update(Member $member): bool
+    {
+        $db = DB::getInstance();
+        $row = $db->prepare('UPDATE ' . $this->tableName .
+        ' SET firstname = :firstname, surname = :surname WHERE id = ' . $member->id);
+
+        $row->bindValue(':firstname', $member->firstname, SQLITE3_TEXT);
+        $row->bindValue(':surname', $member->surname, SQLITE3_TEXT);
+
+        return $row->execute();
+    }
+
+
+    /** Удаление контакта
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id): bool
+    {
+        $db = DB::getInstance();
+
+        //TODO: Транзакция
+
+        $db->query('DELETE FROM ' . $this->tableName . ' WHERE id = ' . $id)->execute();
+        //TODO: Удаление телефонов
         return true;
     }
 
-    public function delete(int $id): bool
-    {
 
-        return true;
+    public function getLastId(): int
+    {
+        $db = DB::getInstance();
+
+        return (int)$this->lastId;
     }
 }
