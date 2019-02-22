@@ -8,13 +8,16 @@ use Domain\ValueObject\Phone;
 class UserPhone
 {
     public $id;
-    public $userId;
     public $number;
+    public $numberFormat;
 
-    public function __construct(int $id, int $userId, Phone $number)
+    public function __construct(Phone $number)
+    {
+        $this->number = $number->phone;
+    }
+
+    public function setId(int $id)
     {
         $this->id = $id;
-        $this->userId = $userId;
-        $this->number = $number;
     }
 }

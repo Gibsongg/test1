@@ -15,7 +15,6 @@ class MemberService {
 
     public function getMemberList()
     {
-        echo '<pre>' . print_r($this->repository->getList()->get(), true) . '</pre>';
         return $this->repository->getList()->get();
     }
 
