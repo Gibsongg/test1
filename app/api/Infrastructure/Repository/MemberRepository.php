@@ -40,6 +40,13 @@ class MemberRepository implements IMemberRepository
         return $collection;
     }
 
+
+
+    public function getById(int $id) {
+
+    }
+
+
     public function add(Member $member): bool
     {
 
