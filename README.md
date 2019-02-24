@@ -3,9 +3,27 @@
 * Apache2
 * php 7.1 
 * SQLite 3
-
 ***
+Описание директорий
+* api - код
+* api/бекенд часть
+* api/assets - статика
+* data - база SQLite (под слежением гита для удобатсва)
+* lara - упращеный laradoc под проект
 
-Выполнить
 
-docker-compose exec -T workspace bash -c "cd app/api && composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"
+Склонировать проект:
+
+> git clone https://github.com/Gibsongg/test1
+
+DOCUMENT_ROOT должен указывать на директорию app
+
+
+Из директории api выполнить команду установку зависимостей и генерации автоподключения классов
+
+Если composer установлен глобально 
+> composer install 
+
+Для удобства в директории lara находится окружение docker с настроеными контейнерами на localhost
+
+
