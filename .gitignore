@@ -2,3 +2,4 @@
 data/mysql
 data/redis
 data/node
+vendor

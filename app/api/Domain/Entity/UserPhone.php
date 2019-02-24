@@ -5,6 +5,10 @@ namespace Domain\Entity;
 
 use Domain\ValueObject\Phone;
 
+/** Сущность для телефонов
+ * Class UserPhone
+ * @package Domain\Entity
+ */
 class UserPhone
 {
     public $id;

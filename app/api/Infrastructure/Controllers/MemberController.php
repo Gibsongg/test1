@@ -6,7 +6,10 @@ namespace Infrastructure\Controllers;
 
 use Domain\Service\MemberService;
 
-
+/** Контроллер для апи
+ * Class MemberController
+ * @package Infrastructure\Controllers
+ */
 class MemberController
 {
     protected $service;
@@ -40,5 +43,16 @@ class MemberController
     public function actionDelete($id)
     {
         $this->service->deleteMember((int) $id);
+    }
+
+
+    public function actionAddPhone($id)
+    {
+        $this->service->addPhoneForMember((int)$id, $_REQUEST);
+    }
+
+    public function actionDeletePhone($id)
+    {
+        $this->service->deletePhone((int)$id);
     }
 }

@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace Domain\Collection;
 
+/** Базовый класс коллекций
+ * Class BaseCollection
+ * @package Domain\Collection
+ */
 class BaseCollection
 {
-    protected $collection;
+    protected $collection = [];
 
     public function get()
     {

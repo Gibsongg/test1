@@ -5,6 +5,10 @@ namespace Domain\Entity;
 
 use Domain\Collection\PhoneCollection;
 
+/** Сущность контакта
+ * Class Member
+ * @package Domain\Entity
+ */
 class Member
 {
     public $id;

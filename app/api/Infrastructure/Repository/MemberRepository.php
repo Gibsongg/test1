@@ -10,7 +10,7 @@ use Domain\Collection\MemberCollection;
 use Domain\Entity\Member;
 use Domain\Repository\IMemberRepository;
 //use Domain\Repository\IPhoneRepository;
-use Infrastructure\Provaider\DB;
+use Infrastructure\Provider\DB;
 
 
 class MemberRepository implements IMemberRepository
@@ -33,7 +33,7 @@ class MemberRepository implements IMemberRepository
     {
         //Создаем инстанс подключения PDO
         $db = DB::getInstance();
-        $rows = $db->query('SELECT * FROM ' . $this->tableName)->fetchAll();
+        $rows = $db->query('SELECT * FROM ' . $this->tableName . ' ORDER BY id DESC')->fetchAll();
 
         //Создадим типизированную коллекцию
         $collection = new MemberCollection();
@@ -48,7 +48,6 @@ class MemberRepository implements IMemberRepository
             $entity->setId((int)$item['id']);
             //добавляем в коллекцию
             $collection->set($entity);
-
         }
 
         return $collection;
@@ -122,11 +121,17 @@ class MemberRepository implements IMemberRepository
     {
         $db = DB::getInstance();
 
-        //TODO: Транзакция
+        $db->beginTransaction();
 
-        $db->query('DELETE FROM ' . $this->tableName . ' WHERE id = ' . $id)->execute();
-        //TODO: Удаление телефонов
-        return true;
+        try {
+            $db->query('DELETE FROM ' . $this->tableName . ' WHERE id = ' . $id)->execute();
+            $this->phoneRepository->deleteByMemberId($id);
+            $db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            return false;
+        }
     }
 
 
